@@ -7,8 +7,10 @@ namespace WpfApp1
 {
     public partial class MainWindow : Window
     {
-        private int subtractionCount = 0;
-
+        private double firstValue = 0;
+        private double secondValue = 0;
+        private string currentOperation = "";
+        private bool firstTime = true;
         public MainWindow()
         {
             InitializeComponent();
@@ -17,95 +19,74 @@ namespace WpfApp1
         private void NumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            string buttonContent = button.Content.ToString();
+            string? buttonContent = button.Content.ToString();
 
-            if (textBox.Text == "0" && buttonContent != ".")
+            if (currentOperation == "")
             {
-                textBox.Text = buttonContent;
+                
+                if (textBox.Text == "0" && buttonContent != ".")
+                {
+                    textBox.Text = buttonContent;
+                }
+                else
+                {
+                    textBox.Text += buttonContent;
+                }
+                
+                firstValue = Convert.ToDouble(textBox.Text);
+         
             }
             else
             {
-                textBox.Text += buttonContent;
+                if (firstTime)
+                {
+                    textBox.Text = "0";
+                    firstTime = false;
+                }
+                if (textBox.Text == "0" && buttonContent != ".")
+                {
+                    textBox.Text = buttonContent;
+                }
+                else
+                {
+                    textBox.Text += buttonContent;
+                }
+
+                secondValue = Convert.ToDouble(textBox.Text);
             }
         }
 
         private void OperationButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            string operation = button.Content.ToString();
-
-            double currentValue;
-            if (double.TryParse(textBox.Text, out currentValue))
+            string? currentValue = button.Content.ToString();
+            if (currentValue != "=")
             {
-                switch (operation)
-                {
-                    case "+":
-                        // Addition
-                        textBox.Text = (Convert.ToDouble(textBox.Text) + Convert.ToDouble(resultLabel.Content)).ToString();
-                        break;
-                    case "-":
-                        // Subtraction
-                        textBox.Text = (Convert.ToDouble(resultLabel.Content) - Convert.ToDouble(textBox.Text)).ToString();
-                        subtractionCount++;
-                        break;
-                    case "*":
-                        // Multiplication
-                        textBox.Text = (Convert.ToDouble(textBox.Text) * Convert.ToDouble(resultLabel.Content)).ToString();
-                        break;
-                    case "/":
-                        // Division
-                        if (Convert.ToDouble(textBox.Text) != 0)
-                        {
-                            textBox.Text = (Convert.ToDouble(resultLabel.Content) / Convert.ToDouble(textBox.Text)).ToString();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Cannot divide by zero!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                        break;
-                    case "1/x":
-                        // Inverse
-                        textBox.Text = (1 / Convert.ToDouble(textBox.Text)).ToString();
-                        break;
-                    case "sqrt":
-                        // Square root
-                        textBox.Text = Math.Sqrt(Convert.ToDouble(textBox.Text)).ToString();
-                        break;
-                    case "x^n":
-                        // Power
-                        textBox.Text = Math.Pow(Convert.ToDouble(resultLabel.Content), Convert.ToDouble(textBox.Text)).ToString();
-                        break;
-                    case "sin":
-                        // Sine
-                        double angle = AngleFromTextBox();
-                        textBox.Text = Math.Sin(angle).ToString();
-                        break;
-                    case "cos":
-                        // Cosine
-                        angle = AngleFromTextBox();
-                        textBox.Text = Math.Cos(angle).ToString();
-                        break;
-                    case "tan":
-                        // Tangent
-                        angle = AngleFromTextBox();
-                        textBox.Text = Math.Tan(angle).ToString();
-                        break;
-                    default:
-                        break;
-                }
-                resultLabel.Content = textBox.Text;
-                textBox.Text = "0";
+                currentOperation = currentValue;
             }
             else
             {
-                MessageBox.Show("Invalid input!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if ((firstValue == 0 || secondValue == 0) && currentOperation == "/")
+                {
+                    MessageBox.Show("Wrong input!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    double result = CalculateResult(firstValue, secondValue, currentOperation);
+
+                    textBox.Text = "0";
+                    resultLabel.Content = result;
+                }
+                currentOperation = "";
+                firstValue = 0;
+                secondValue = 0;
+                firstTime = true;
             }
         }
-
-        private double AngleFromTextBox()
+            private double AngleFromTextBox()
         {
             double angle;
-            if (angleTypeComboBox.SelectedIndex == 0) // Degrees
+            if (angleTypeComboBox.SelectedIndex == 0)
             {
                 angle = Convert.ToDouble(textBox.Text) * Math.PI / 180;
             }
@@ -114,6 +95,24 @@ namespace WpfApp1
                 angle = Convert.ToDouble(textBox.Text);
             }
             return angle;
+        }
+
+        private double CalculateResult(double firstOperand, double secondOperand, string operation)
+        {
+            switch (operation)
+            {
+                case "+":
+                    return firstOperand + secondOperand;
+                case "-":
+                    return firstOperand - secondOperand;
+                case "*":
+                    return firstOperand * secondOperand;
+                case "/":
+                    return firstOperand / secondOperand;
+                default:
+                    MessageBox.Show("Operation not recognized!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return double.NaN; // Not a Number when operation is invalid
+            }
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -189,9 +188,9 @@ namespace WpfApp1
             }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
-            MessageBox.Show($"Number of subtractions in session: {subtractionCount}", "Session Statistics", MessageBoxButton.OK, MessageBoxImage.Information);
+            
         }
     }
 }

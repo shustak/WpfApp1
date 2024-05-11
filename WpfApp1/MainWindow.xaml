@@ -59,7 +59,7 @@
         <!-- Result and Mode Selection -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Label Content="Result:" VerticalAlignment="Center"/>
-            <Label x:Name="resultLabel" Content="0" VerticalAlignment="Center" FontWeight="Bold"/>
+            <Label x:Name="resultLabel" Grid.Row="2" Content="0" FontSize="24" HorizontalAlignment="Center" Margin="10"/>
             <ComboBox x:Name="angleTypeComboBox" Width="100" Margin="10,0,0,0">
                 <ComboBoxItem Content="Degrees"/>
                 <ComboBoxItem Content="Radians" IsSelected="True"/>
