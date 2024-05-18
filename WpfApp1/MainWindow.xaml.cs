@@ -18,72 +18,86 @@ namespace WpfApp1
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            string? buttonContent = button.Content.ToString();
-
-            if (currentOperation == "")
+            try
             {
-                
-                if (textBox.Text == "0" && buttonContent != ".")
+                Button button = (Button)sender;
+                string? buttonContent = button.Content.ToString();
+
+                if (currentOperation == "")
                 {
-                    textBox.Text = buttonContent;
+
+                    if (textBox.Text == "0" && buttonContent != ".")
+                    {
+                        textBox.Text = buttonContent;
+                    }
+                    else
+                    {
+                        textBox.Text += buttonContent;
+                    }
+
+                    firstValue = Convert.ToDouble(textBox.Text);
+
                 }
                 else
                 {
-                    textBox.Text += buttonContent;
+                    if (firstTime)
+                    {
+                        textBox.Text = "0";
+                        firstTime = false;
+                    }
+                    if (textBox.Text == "0" && buttonContent != ".")
+                    {
+                        textBox.Text = buttonContent;
+                    }
+                    else
+                    {
+                        textBox.Text += buttonContent;
+                    }
+
+                    secondValue = Convert.ToDouble(textBox.Text);
                 }
-                
-                firstValue = Convert.ToDouble(textBox.Text);
-         
             }
-            else
+            catch (Exception ex)
             {
-                if (firstTime)
-                {
-                    textBox.Text = "0";
-                    firstTime = false;
-                }
-                if (textBox.Text == "0" && buttonContent != ".")
-                {
-                    textBox.Text = buttonContent;
-                }
-                else
-                {
-                    textBox.Text += buttonContent;
-                }
-
-                secondValue = Convert.ToDouble(textBox.Text);
+                MessageBox.Show($"Ошибка при внесении данных: {ex.Message}");
             }
         }
 
         private void OperationButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            string? currentValue = button.Content.ToString();
-            if (currentValue != "=")
+            try
             {
-                currentOperation = currentValue;
-            }
-            else
-            {
-                if ((firstValue == 0 || secondValue == 0) && currentOperation == "/")
+                Button button = (Button)sender;
+                string? currentValue = button.Content.ToString();
+                if (currentValue != "=")
                 {
-                    MessageBox.Show("Wrong input!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    currentOperation = currentValue;
                 }
                 else
                 {
-                    double result = CalculateResult(firstValue, secondValue, currentOperation);
+                    if ((firstValue == 0 || secondValue == 0) && currentOperation == "/")
+                    {
+                        MessageBox.Show("Wrong input!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        double result = CalculateResult(firstValue, secondValue, currentOperation);
 
-                    textBox.Text = "0";
-                    resultLabel.Content = result;
+                        textBox.Text = "0";
+                        resultLabel.Content = result;
+                    }
+                    currentOperation = "";
+                    firstValue = 0;
+                    secondValue = 0;
+                    firstTime = true;
                 }
-                currentOperation = "";
-                firstValue = 0;
-                secondValue = 0;
-                firstTime = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при нажатии оператора: {ex.Message}");
             }
         }
-            private double AngleFromTextBox()
+        private double AngleFromTextBox()
         {
             double angle;
             if (angleTypeComboBox.SelectedIndex == 0)
@@ -117,74 +131,88 @@ namespace WpfApp1
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            textBox.Text = "0";
+            try
+            {
+                textBox.Text = "0";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при нажатии кнопки очистки: {ex.Message}");
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            try
             {
-                case Key.D0:
-                case Key.NumPad0:
-                    NumberButton_Click(button0, null);
-                    break;
-                case Key.D1:
-                case Key.NumPad1:
-                    NumberButton_Click(button1, null);
-                    break;
-                case Key.D2:
-                case Key.NumPad2:
-                    NumberButton_Click(button2, null);
-                    break;
-                case Key.D3:
-                case Key.NumPad3:
-                    NumberButton_Click(button3, null);
-                    break;
-                case Key.D4:
-                case Key.NumPad4:
-                    NumberButton_Click(button4, null);
-                    break;
-                case Key.D5:
-                case Key.NumPad5:
-                    NumberButton_Click(button5, null);
-                    break;
-                case Key.D6:
-                case Key.NumPad6:
-                    NumberButton_Click(button6, null);
-                    break;
-                case Key.D7:
-                case Key.NumPad7:
-                    NumberButton_Click(button7, null);
-                    break;
-                case Key.D8:
-                case Key.NumPad8:
-                    NumberButton_Click(button8, null);
-                    break;
-                case Key.D9:
-                case Key.NumPad9:
-                    NumberButton_Click(button9, null);
-                    break;
-                case Key.OemPeriod:
-                case Key.Decimal:
-                    NumberButton_Click(buttonDot, null);
-                    break;
-                case Key.Add:
-                    OperationButton_Click(buttonAdd, null);
-                    break;
-                case Key.Subtract:
-                    OperationButton_Click(buttonSubtract, null);
-                    break;
-                case Key.Multiply:
-                    OperationButton_Click(buttonMultiply, null);
-                    break;
-                case Key.Divide:
-                    OperationButton_Click(buttonDivide, null);
-                    break;
-                case Key.Enter:
-                    OperationButton_Click(buttonEquals, null);
-                    break;
-                default:
-                    break;
+                switch (e.Key)
+                {
+                    case Key.D0:
+                    case Key.NumPad0:
+                        NumberButton_Click(button0, null);
+                        break;
+                    case Key.D1:
+                    case Key.NumPad1:
+                        NumberButton_Click(button1, null);
+                        break;
+                    case Key.D2:
+                    case Key.NumPad2:
+                        NumberButton_Click(button2, null);
+                        break;
+                    case Key.D3:
+                    case Key.NumPad3:
+                        NumberButton_Click(button3, null);
+                        break;
+                    case Key.D4:
+                    case Key.NumPad4:
+                        NumberButton_Click(button4, null);
+                        break;
+                    case Key.D5:
+                    case Key.NumPad5:
+                        NumberButton_Click(button5, null);
+                        break;
+                    case Key.D6:
+                    case Key.NumPad6:
+                        NumberButton_Click(button6, null);
+                        break;
+                    case Key.D7:
+                    case Key.NumPad7:
+                        NumberButton_Click(button7, null);
+                        break;
+                    case Key.D8:
+                    case Key.NumPad8:
+                        NumberButton_Click(button8, null);
+                        break;
+                    case Key.D9:
+                    case Key.NumPad9:
+                        NumberButton_Click(button9, null);
+                        break;
+                    case Key.OemPeriod:
+                    case Key.Decimal:
+                        NumberButton_Click(buttonDot, null);
+                        break;
+                    case Key.Add:
+                        OperationButton_Click(buttonAdd, null);
+                        break;
+                    case Key.Subtract:
+                        OperationButton_Click(buttonSubtract, null);
+                        break;
+                    case Key.Multiply:
+                        OperationButton_Click(buttonMultiply, null);
+                        break;
+                    case Key.Divide:
+                        OperationButton_Click(buttonDivide, null);
+                        break;
+                    case Key.Enter:
+                        OperationButton_Click(buttonEquals, null);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка нажатия цифры: {ex.Message}");
             }
         }
 
