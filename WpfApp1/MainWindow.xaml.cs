@@ -11,9 +11,13 @@ namespace WpfApp1
         private double secondValue = 0;
         private string currentOperation = "";
         private bool firstTime = true;
+        private DateTime startTime;
+
         public MainWindow()
         {
             InitializeComponent();
+            startTime = DateTime.Now;
+            statusBarText.Text += startTime.ToString("HH:mm:ss");
         }
 
         private void NumberButton_Click(object sender, RoutedEventArgs e)
@@ -25,7 +29,6 @@ namespace WpfApp1
 
                 if (currentOperation == "")
                 {
-
                     if (textBox.Text == "0" && buttonContent != ".")
                     {
                         textBox.Text = buttonContent;
@@ -36,7 +39,6 @@ namespace WpfApp1
                     }
 
                     firstValue = Convert.ToDouble(textBox.Text);
-
                 }
                 else
                 {
@@ -59,7 +61,7 @@ namespace WpfApp1
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при внесении данных: {ex.Message}");
+                MessageBox.Show($"Error while entering data: {ex.Message}");
             }
         }
 
@@ -94,9 +96,10 @@ namespace WpfApp1
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при нажатии оператора: {ex.Message}");
+                MessageBox.Show($"Error when pressing operator: {ex.Message}");
             }
         }
+
         private double AngleFromTextBox()
         {
             double angle;
@@ -123,9 +126,53 @@ namespace WpfApp1
                     return firstOperand * secondOperand;
                 case "/":
                     return firstOperand / secondOperand;
+                case "1/x":
+                    return 1 / firstOperand;
+                case "√":
+                    return Math.Sqrt(firstOperand);
+                case "^":
+                    return Math.Pow(firstOperand, secondOperand);
                 default:
                     MessageBox.Show("Operation not recognized!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return double.NaN; // Not a Number when operation is invalid
+                    return double.NaN;
+            }
+        }
+
+        private void TrigOperationButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Button button = (Button)sender;
+                string operation = button.Content.ToString();
+                double angle = AngleFromTextBox();
+
+                double result;
+                switch (operation)
+                {
+                    case "sin":
+                        result = Math.Sin(angle);
+                        break;
+                    case "cos":
+                        result = Math.Cos(angle);
+                        break;
+                    case "tan":
+                        result = Math.Tan(angle);
+                        break;
+                    default:
+                        MessageBox.Show("Trig operation not recognized!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                }
+
+                resultLabel.Content = result;
+                textBox.Text = "0";
+                currentOperation = "";
+                firstValue = 0;
+                secondValue = 0;
+                firstTime = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when pressing trigonometric function: {ex.Message}");
             }
         }
 
@@ -137,7 +184,7 @@ namespace WpfApp1
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при нажатии кнопки очистки: {ex.Message}");
+                MessageBox.Show($"Error when pressing the clear button: {ex.Message}");
             }
         }
 
@@ -212,13 +259,13 @@ namespace WpfApp1
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка нажатия цифры: {ex.Message}");
+                MessageBox.Show($"Error pressing a number: {ex.Message}");
             }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

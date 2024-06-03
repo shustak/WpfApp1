@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         
-        Title="Calculator" Height="450" Width="400">
+        Title="Calculator" Height="450" Width="600">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -23,8 +24,10 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
@@ -36,25 +39,33 @@
             <Button x:Name="button7" Content="7" Grid.Row="0" Grid.Column="0" Click="NumberButton_Click"/>
             <Button x:Name="button8" Content="8" Grid.Row="0" Grid.Column="1" Click="NumberButton_Click"/>
             <Button x:Name="button9" Content="9" Grid.Row="0" Grid.Column="2" Click="NumberButton_Click"/>
+            <Button x:Name="buttonDivide" Content="/" Grid.Row="0" Grid.Column="3" Click="OperationButton_Click"/>
+            <Button x:Name="buttonSquareRoot" Content="√" Grid.Row="0" Grid.Column="4" Click="OperationButton_Click"/>
+
             <Button x:Name="button4" Content="4" Grid.Row="1" Grid.Column="0" Click="NumberButton_Click"/>
             <Button x:Name="button5" Content="5" Grid.Row="1" Grid.Column="1" Click="NumberButton_Click"/>
             <Button x:Name="button6" Content="6" Grid.Row="1" Grid.Column="2" Click="NumberButton_Click"/>
+            <Button x:Name="buttonMultiply" Content="*" Grid.Row="1" Grid.Column="3" Click="OperationButton_Click"/>
+            <Button x:Name="buttonReciprocal" Content="1/x" Grid.Row="1" Grid.Column="4" Click="OperationButton_Click"/>
+
             <Button x:Name="button1" Content="1" Grid.Row="2" Grid.Column="0" Click="NumberButton_Click"/>
             <Button x:Name="button2" Content="2" Grid.Row="2" Grid.Column="1" Click="NumberButton_Click"/>
             <Button x:Name="button3" Content="3" Grid.Row="2" Grid.Column="2" Click="NumberButton_Click"/>
+            <Button x:Name="buttonSubtract" Content="-" Grid.Row="2" Grid.Column="3" Click="OperationButton_Click"/>
+            <Button x:Name="buttonPower" Content="^" Grid.Row="2" Grid.Column="4" Click="OperationButton_Click"/>
+
             <Button x:Name="button0" Content="0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Click="NumberButton_Click"/>
             <Button x:Name="buttonDot" Content="." Grid.Row="3" Grid.Column="2" Click="NumberButton_Click"/>
-
-            <!-- Operation Buttons -->
-            <Button x:Name="buttonDivide" Content="/" Grid.Row="0" Grid.Column="3" Click="OperationButton_Click"/>
-            <Button x:Name="buttonMultiply" Content="*" Grid.Row="1" Grid.Column="3" Click="OperationButton_Click"/>
-            <Button x:Name="buttonSubtract" Content="-" Grid.Row="2" Grid.Column="3" Click="OperationButton_Click"/>
             <Button x:Name="buttonAdd" Content="+" Grid.Row="3" Grid.Column="3" Click="OperationButton_Click"/>
-            <Button x:Name="buttonEquals" Content="=" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Click="OperationButton_Click"/>
+            <Button x:Name="buttonEquals" Content="=" Grid.Row="3" Grid.Column="4" Click="OperationButton_Click"/>
+
+            <!-- Trigonometric Buttons -->
+            <Button x:Name="buttonSin" Content="sin" Grid.Row="4" Grid.Column="0" Click="TrigOperationButton_Click"/>
+            <Button x:Name="buttonCos" Content="cos" Grid.Row="4" Grid.Column="1" Click="TrigOperationButton_Click"/>
+            <Button x:Name="buttonTan" Content="tan" Grid.Row="4" Grid.Column="2" Click="TrigOperationButton_Click"/>
 
             <!-- Special Functions -->
-            <Button Content="C" Grid.Row="4" Grid.Column="0" Click="ClearButton_Click"/>
-            <Button Content="sqrt" Grid.Row="4" Grid.Column="1" Click="OperationButton_Click"/>
+            <Button Content="C" Grid.Row="4" Grid.Column="3" Click="ClearButton_Click"/>
         </Grid>
 
         <!-- Result and Mode Selection -->
@@ -66,5 +77,12 @@
                 <ComboBoxItem Content="Radians" IsSelected="True"/>
             </ComboBox>
         </StackPanel>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock x:Name="statusBarText" Text="Program started at: " />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
